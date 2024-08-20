@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:revisions1/bloc/status_cubit.dart';
 import 'package:revisions1/screens/status.dart';
+import 'package:revisions1/services/status_service.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => NewStatusCubit(),
+      create: (_) => NewStatusCubit(StatusService()),
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(

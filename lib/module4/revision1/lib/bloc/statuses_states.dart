@@ -2,6 +2,8 @@ import 'package:revisions1/models/status.dart';
 
 class NewStatusState {}
 
+class NewStatusInitializingState extends NewStatusState {}
+
 class NewStatusEditingState extends NewStatusState {
   final List<Status> statuses;
   final String input;

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:revisions1/bloc/status_cubit.dart';
 import 'package:revisions1/bloc/statuses_states.dart';
 import 'package:revisions1/screens/new_status.dart';
+import 'package:revisions1/widgets/item_status.dart';
 
 class StatusPage extends StatelessWidget {
   const StatusPage({super.key});
@@ -17,40 +18,41 @@ class StatusPage extends StatelessWidget {
       body: ListView(
         children: [
           BlocBuilder<NewStatusCubit, NewStatusState>(
-            buildWhen: (previous, current) {
-              return current is NewStatusEditingState;
-            },
             builder: (context, state) {
               if (state is NewStatusEditingState) {
-                return Text(
-                  "${state.statuses.length}",
-                  style: const TextStyle(fontSize: 40),
-                  textAlign: TextAlign.center,
+                if (state.statuses.isEmpty) {
+                  return const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 40.0),
+                    child: Text(
+                      "Aucun statut enregistré",
+                      style: TextStyle(color: Colors.grey),
+                      textAlign: TextAlign.center,
+                    ),
+                  );
+                }
+                return ListView.builder(
+                  itemBuilder: (_, i) => StatusItem(status: state.statuses[i]),
+                  itemCount: state.statuses.length,
+                  physics: const PageScrollPhysics(),
+                  shrinkWrap: true,
+                );
+              } else if (state is NewStatusInitializingState) {
+                return Container(
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.symmetric(vertical: 40.0),
+                  child: CircularProgressIndicator()
+                );
+              } else if (state is NewStatusErrorState) {
+                return Container(
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.symmetric(vertical: 40.0),
+                  child: Text("Une erreur est survenue"),
                 );
               } else {
                 return const SizedBox();
               }
             },
           ),
-          /*ListView.builder(
-            itemBuilder: (_, i) => ListTile(
-              leading: const CircleAvatar(
-                backgroundColor: Colors.grey,
-              ),
-              title: Text("0 views"),
-              subtitle: Text("Just now"),
-              trailing: IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.more_vert,
-                  color: Theme.of(context).primaryColor,
-                ),
-              ),
-            ),
-            itemCount: 2,
-            physics: const PageScrollPhysics(),
-            shrinkWrap: true,
-          ),*/
           const Divider(thickness: 0.2),
           Row(
             children: [
